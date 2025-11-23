@@ -25,7 +25,6 @@ class MainApp extends StatelessWidget {
   static const Color _lightBackground = Color(0xFFF8F9FA);
   static const Color _lightSurface = Color(0xFFFFFFFF);
 
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -34,6 +33,7 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => FavouriteProvider()),
       ],
 			child: MaterialApp(
+				title: 'Shopping App',
 				theme: ThemeData(
 					useMaterial3: true,
 					brightness: Brightness.light,
@@ -52,7 +52,7 @@ class MainApp extends StatelessWidget {
 						foregroundColor: _lightTextPrimary,
 						elevation: 0,
 					),
-			
+
 					bottomNavigationBarTheme: const BottomNavigationBarThemeData(
 						backgroundColor: _lightSurface,
 						selectedItemColor: _lightPrimary,
