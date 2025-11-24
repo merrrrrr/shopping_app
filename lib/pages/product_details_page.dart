@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shopping_app/data/cart_items.dart';
+import 'package:shopping_app/data/favourite_items.dart';
 import 'package:shopping_app/models/item.dart';
-import 'package:shopping_app/providers/cart_provider.dart';
-import 'package:shopping_app/providers/favourite_provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../models/product.dart';
 
@@ -176,27 +176,22 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           ),
 
           // ========== FAVORITE BUTTON ==========
-          Consumer<FavouriteProvider>(
-						builder: (context, favouriteProvider, child) {
-							final isFavourite = favouriteProvider.isFavourite(widget.product.id!);
-						  return Container(
-								decoration: BoxDecoration(
-									color: Colors.black.withAlpha(50),
-									shape: BoxShape.circle,
-								),
-								child: IconButton(
-									onPressed: () {
-										favouriteProvider.toggleFavourite(widget.product.id!);
-									},
-									style: IconButton.styleFrom(splashFactory: NoSplash.splashFactory),
-									icon: Icon(
-										isFavourite ? Icons.favorite : Icons.favorite_border,
-										color: isFavourite ? Colors.red : Colors.white,
-									),
-								),
-							);
-						},
-					),
+         Container(
+                decoration: BoxDecoration(
+                  color: Colors.black.withAlpha(50),
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  onPressed: () {
+                    favouriteItems.contains(widget.product.id) ? favouriteItems.remove(widget.product.id) : favouriteItems.add(widget.product.id!);
+                  },
+                  style: IconButton.styleFrom(splashFactory: NoSplash.splashFactory),
+                  icon: Icon(
+                    favouriteItems.contains(widget.product.id) ? Icons.favorite : Icons.favorite_border,
+                    color: favouriteItems.contains(widget.product.id) ? Colors.red : Colors.white,
+                  ),
+                ),
+              ),
         ],
       ),
     );
@@ -215,8 +210,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           Expanded(
             child: ElevatedButton(
               onPressed: () {
-                final cartProvider = Provider.of<CartProvider>(context, listen: false);
-                
                 final newItem = Item(
                   productId: widget.product.id!,
                   productName: widget.product.name,
@@ -225,7 +218,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   quantity: quantity,
                 );
                 
-                cartProvider.addItem(newItem);
+                cartItems.add({newItem: quantity});
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(

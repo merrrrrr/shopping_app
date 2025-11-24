@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:provider/provider.dart';
+import 'package:shopping_app/data/cart_items.dart';
 import 'package:shopping_app/models/item.dart';
-import '../providers/cart_provider.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
@@ -11,35 +10,27 @@ class CartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Shopping Cart")),
-      body: Consumer<CartProvider>(
-				builder: (context, cartProvider, child) {
-				  if (cartProvider.cartItems.isEmpty) {
-						return _buildEmptyState(context);
-          }
+      body: Column(
+				children: [
+					Expanded(
+						child: ListView.builder(
+							itemCount: cartItems.length,
+							itemBuilder: (context, index) {
+								Item cartItem = cartItems[index].keys.first;
+								
+								return _buildCartItemCard(context, index);
+							},
+						),
+					),
 
-					return Column(
-						children: [
-							Expanded(
-								child: ListView.builder(
-									itemCount: cartProvider.cartItems.length,
-									itemBuilder: (context, index) {
-										Item cartItem = cartProvider.cartItems[index];
-										
-										return _buildCartItemCard(context, cartItem, index, cartProvider);
-									},
-								),
-							),
+					_buildCheckoutBar(context),
 
-							_buildCheckoutBar(context, cartProvider),
-
-						],
-					);
-				},
+				],
 			),
     );
   }
 
-	Widget _buildCheckoutBar(BuildContext context, CartProvider cartProvider) {
+	Widget _buildCheckoutBar(BuildContext context) {
 		return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -57,18 +48,18 @@ class CartPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
 
-          Text(
-            "Total: RM ${cartProvider.total.toStringAsFixed(2)}",
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+		  Text(
+			"Total: RM ${cartItems.fold(0.0, (total, item) => total + item.keys.first.price * item.values.first).toStringAsFixed(2)}",
+			style: const TextStyle(
+			  fontSize: 18,
+			  fontWeight: FontWeight.bold,
+			),
+		  ),
 
-          ElevatedButton(
-            onPressed: cartProvider.cartItems.isEmpty ? null : () async {
-							final orderId = await cartProvider.checkout();
-							cartProvider.clearCart();
+		  ElevatedButton(
+			onPressed: cartItems.isEmpty ? null : () {
+							final orderId = DateTime.now().millisecondsSinceEpoch.toString();
+							cartItems.clear();
 
 							if (!context.mounted) return;
 							
@@ -95,7 +86,8 @@ class CartPage extends StatelessWidget {
     );
 	}
 
-	Widget _buildCartItemCard(BuildContext context, Item cartItem, int index, CartProvider cartProvider) {
+	Widget _buildCartItemCard(BuildContext context, int index) {
+		final cartItem = cartItems[index].keys.first;
 		return Card(
       clipBehavior: Clip.hardEdge,
 			margin: const EdgeInsets.symmetric(
@@ -110,7 +102,7 @@ class CartPage extends StatelessWidget {
     	    children: [
     	      SlidableAction(
     	        onPressed: (context) {
-    	          cartProvider.removeItem(index);
+    	          cartItems.removeAt(index);
     	        },
     	        backgroundColor: Colors.red,
     	        foregroundColor: Colors.white,
@@ -171,22 +163,22 @@ class CartPage extends StatelessWidget {
 												// Widget: Quantity Selector
                         Row(
                           children: [
-                            IconButton(
-                              icon: const Icon(Icons.remove_circle_outline),
-                              onPressed: cartItem.quantity > 1 ? () {
-                                cartProvider.updateQuantity(index, cartItem.quantity - 1);
-                              } : null,
-                            ),
+							IconButton(
+							  icon: const Icon(Icons.remove_circle_outline),
+							  onPressed: cartItem.quantity > 1 ? () {
+								cartItems[index][cartItem] = cartItem.quantity - 1;
+							  } : null,
+							),
 
-                            Text(
-                              cartItem.quantity.toString(),
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
+							Text(
+							  cartItem.quantity.toString(),
+							  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+							),
 
                             IconButton(
                               icon: const Icon(Icons.add_circle_outline),
                               onPressed: () {
-                                cartProvider.updateQuantity(index, cartItem.quantity + 1);
+                                cartItems[index][cartItem] = cartItem.quantity + 1;
                               },
                             ),
                           ],

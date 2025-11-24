@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shopping_app/services/product_service.dart';
+import 'package:shopping_app/data/product_data.dart';
 import '../../models/product.dart';
 import '../widgets/product_card.dart';
 
@@ -11,45 +11,20 @@ class ProductsPage extends StatefulWidget {
 }
 
 class _ProductsPageState extends State<ProductsPage> {
-	final ProductService _productService = ProductService();
 	final TextEditingController searchBarController = TextEditingController();
-	List<Product> _allProducts = [];
-	List<Product> _filteredProducts = [];
-	bool _isLoading = true;
+	List<Product> _filteredProducts = products;
 
 	@override
   void initState() {
     super.initState();
-    _loadProducts();
-  }
-
-  Future<void> _loadProducts() async {
-    try {
-      final products = await _productService.getAllProducts();
-			if (!mounted) return;
-      setState(() {
-        _allProducts = products;
-        _filteredProducts = products;
-        _isLoading = false;
-      });
-    } catch (e) {
-			if (!mounted) return;
-      setState(() {
-        _isLoading = false;
-      });
-      if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Failed to load products: $e')));
-    }
   }
 
   void _filterProducts(String query) {
     setState(() {
       if (query.isEmpty) {
-        _filteredProducts = _allProducts;
+        _filteredProducts = products;
       } else {
-        _filteredProducts = _allProducts.where((product) {
+        _filteredProducts = products.where((product) {
           return product.name.toLowerCase().contains(query.toLowerCase());
         }).toList();
       }
@@ -87,9 +62,7 @@ class _ProductsPageState extends State<ProductsPage> {
         ),
 			),
 
-      body: _isLoading
-			? Center(child: CircularProgressIndicator())
-			: Column(
+      body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 					Padding(

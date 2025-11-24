@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_app/pages/favourites_page.dart';
 import 'package:shopping_app/pages/order_history_page.dart';
@@ -10,46 +8,27 @@ class AccountPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
+		final userName = 'User';
+    final userEmail = 'someone@example.com';
+    final photoUrl = 'assets/default_avatar.png';
 
     return Scaffold(
       appBar: AppBar(
         title: const Text("My Account"),
       ),
-      body: StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance
-          .collection("users")
-          .doc(user?.uid)
-          .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (!snapshot.hasData || !snapshot.data!.exists) {
-            return const Center(child: Text("User data not found"));
-          }
-
-          final userData = snapshot.data!.data() as Map<String, dynamic>;
-          final userName = userData['name'] ?? 'User';
-          final userEmail = userData['email'] ?? user?.email ?? '';
-          final photoUrl = 'assets/default_avatar.png';
-
-          return ListView(
-						physics: NeverScrollableScrollPhysics(),
-            children: <Widget>[
-              _buildProfileHeader(context, userName, userEmail, photoUrl),
-          
-              const SizedBox(height: 10),
-          
-              _buildMenuList(context),
-          
-              const SizedBox(height: 20),
-          
-              _buildLogoutButton(context),
-            ],
-          );
-        }
+      body: ListView(
+				physics: NeverScrollableScrollPhysics(),
+      	children: <Widget>[
+      	  _buildProfileHeader(context, userName, userEmail, photoUrl),
+	
+      	  const SizedBox(height: 10),
+	
+      	  _buildMenuList(context),
+	
+      	  const SizedBox(height: 20),
+	
+      	  _buildLogoutButton(context),
+      	],
       ),
     );
   }
@@ -60,12 +39,15 @@ class AccountPage extends StatelessWidget {
 			padding: const EdgeInsets.all(20.0),
 			child: Row(
 				children: [
+
 					CircleAvatar(
 						radius: 40,
 						backgroundImage: AssetImage(photoUrl),
 						backgroundColor: Theme.of(context).colorScheme.surface,
 					),
+
 					const SizedBox(width: 20),
+
 					Expanded(
 						child: Column(
 							crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,9 +61,11 @@ class AccountPage extends StatelessWidget {
 									),
 									overflow: TextOverflow.ellipsis,
 								),
+
 								const SizedBox(height: 4),
+
 								Text(
-									FirebaseAuth.instance.currentUser?.email ?? "",
+									userEmail,
 									style: TextStyle(
 										fontSize: 14,
 										color: Theme.of(context).colorScheme.onSurface.withAlpha(153),
@@ -166,7 +150,7 @@ class AccountPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        onPressed: FirebaseAuth.instance.signOut,
+        onPressed: () {},
       ),
     );
   }

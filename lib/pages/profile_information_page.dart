@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shopping_app/pages/change_password_page.dart';
-import 'package:shopping_app/services/user_service.dart';
 
 class ProfileInformationPage extends StatefulWidget {
   const ProfileInformationPage({super.key});
@@ -20,31 +17,10 @@ class _ProfileInformationPageState extends State<ProfileInformationPage> {
   bool _isSaving = false;
 	final String _avatarUrl = 'assets/default_avatar.png';
 
-	Future<void> _loadUserData() async {
-		setState(() {
-			_isLoading = true;
-		});
-		try {
-			final user = await UserService().getUser();
-			setState(() {
-				_nameController.text = user.name;
-				_phoneController.text = user.phoneNumber;
-				_addressController.text = user.address;
-			});
-			
-		} catch (e) {
-			debugPrint('Error loading user data: $e');
-		} finally {
-			setState(() {
-				_isLoading = false;
-			});
-		}
-	}
 
   @override
   void initState() {
     super.initState();
-    _loadUserData();
   }
 
   @override
@@ -58,7 +34,6 @@ class _ProfileInformationPageState extends State<ProfileInformationPage> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
       appBar: AppBar(
@@ -66,15 +41,7 @@ class _ProfileInformationPageState extends State<ProfileInformationPage> {
         actions: [
           if (!_isLoading)
           TextButton(
-            onPressed: _isSaving ? null : () async {
-							_isSaving = true;
-							await UserService().updateUser(
-								_nameController.text.trim(),
-								_phoneController.text.trim(),
-								_avatarUrl,
-								_addressController.text.trim(),
-							);
-							_isSaving = false;
+            onPressed: () async {
 							showDialog(
 								context: context,
 								builder: (context) => AlertDialog(
@@ -117,7 +84,7 @@ class _ProfileInformationPageState extends State<ProfileInformationPage> {
               // Email (Read-only)
               _buildReadOnlyField(
                 label: 'Email',
-                value: user?.email ?? 'No email',
+                value: 'someone@example.com',
                 icon: Icons.email_outlined,
               ),
 
@@ -175,14 +142,7 @@ class _ProfileInformationPageState extends State<ProfileInformationPage> {
               const SizedBox(height: 30),
 
 							OutlinedButton(
-								onPressed: () {
-									Navigator.push(
-										context,
-										MaterialPageRoute(
-											builder: (context) => ChangePasswordPage(),
-										),
-									);
-								},
+								onPressed: () {},
 								style: OutlinedButton.styleFrom(
 									side: BorderSide(color: colorScheme.primary),
 									shape: RoundedRectangleBorder(
@@ -211,7 +171,6 @@ class _ProfileInformationPageState extends State<ProfileInformationPage> {
 													),
 													TextButton(
 														onPressed: () {
-															UserService().deleteUser();
 															Navigator.of(context).pop();
 														},
 														child: const Text('Delete', style: TextStyle(color: Colors.red)),

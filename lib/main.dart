@@ -1,17 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shopping_app/firebase_options.dart';
-import 'package:shopping_app/pages/login_page.dart';
-import 'package:shopping_app/providers/cart_provider.dart';
-import 'package:shopping_app/providers/favourite_provider.dart';
 import 'package:shopping_app/widgets/bottom_nav_bar.dart';
-void main() async{
-	WidgetsFlutterBinding.ensureInitialized();
-	await Firebase.initializeApp(
-		options: DefaultFirebaseOptions.currentPlatform
-	);
+void main() {
   runApp(const MainApp());
 }
 
@@ -27,12 +16,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => CartProvider()),
-        ChangeNotifierProvider(create: (_) => FavouriteProvider()),
-      ],
-			child: MaterialApp(
+    return MaterialApp(
 				title: 'Shopping App',
 				theme: ThemeData(
 					useMaterial3: true,
@@ -90,27 +74,7 @@ class MainApp extends StatelessWidget {
 				
 				themeMode: ThemeMode.light,
 				debugShowCheckedModeBanner: false,
-				home: StreamBuilder<User?>(
-					stream: FirebaseAuth.instance.authStateChanges(),
-					builder:(context, snapshot) {
-						if (snapshot.connectionState == ConnectionState.waiting) {
-							return Center(
-								child: CircularProgressIndicator()
-							);
-						}
-	
-						if (snapshot.hasData && snapshot.data != null) {
-							WidgetsBinding.instance.addPostFrameCallback((_) {
-              	Provider.of<FavouriteProvider>(context, listen: false).loadFavourites();
-            	});
-
-							return const BottomNavBar();
-						}
-							
-						return const LoginPage();
-					},
-				)
-			),
+				home: BottomNavBar()
 		);
   }
 }

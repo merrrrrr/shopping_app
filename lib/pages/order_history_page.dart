@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shopping_app/models/order.dart';
-import 'package:shopping_app/services/order_service.dart';
+import 'package:shopping_app/data/order_data.dart';
 
 class OrderHistoryPage extends StatefulWidget {
   const OrderHistoryPage({super.key});
@@ -10,7 +9,6 @@ class OrderHistoryPage extends StatefulWidget {
 }
 
 class _OrderHistoryPageState extends State<OrderHistoryPage> {
-  OrderService orderService = OrderService();
 
   @override
   Widget build(BuildContext context) {
@@ -21,28 +19,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
         title: const Text('Order History'),
         elevation: 0,
       ),
-      body: FutureBuilder<List<Order>>(
-        future: orderService.getAllOrders(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                'Failed to load orders: ${snapshot.error}',
-              ),
-            );
-          }
-
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return _buildEmptyState(context);
-          }
-
-          final orders = snapshot.data!;
-
-          return ListView.builder(
+      body: ListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: orders.length,
             itemBuilder: (context, index) {
@@ -277,9 +254,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                 ),
               );
             },
-          );
-        },
-      ),
+          ),
     );
   }
 

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shopping_app/models/product.dart';
-import 'package:shopping_app/providers/favourite_provider.dart';
-import 'package:shopping_app/services/product_service.dart';
+import 'package:shopping_app/data/favourite_items.dart';
+import 'package:shopping_app/data/product_data.dart';
 import 'package:shopping_app/widgets/product_card.dart';
 
 class FavouritesPage extends StatefulWidget {
@@ -13,7 +11,6 @@ class FavouritesPage extends StatefulWidget {
 }
 
 class _FavouritesPageState extends State<FavouritesPage> {
-	final ProductService _productService = ProductService();
 
   @override
   Widget build(BuildContext context) {
@@ -22,85 +19,21 @@ class _FavouritesPageState extends State<FavouritesPage> {
         title: const Text('My Favourites'),
         elevation: 0,
       ),
-      body: FutureBuilder<List<Product>>(
-				future: _productService.getAllProducts(),
-				builder: (context, snapshot) {
-				  if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-					if (snapshot.hasError) {
-            return Center(
-              child: Text('Error loading products: ${snapshot.error}'),
-            );
-          }
-
-					if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return _buildEmptyState(context);
-          }
-
-					return Consumer<FavouriteProvider>(
-						builder: (context, favouriteProvider, child) {
-							if (favouriteProvider.favouriteProductIds.isEmpty) {
-								return _buildEmptyState(context);
-							}
-					
-							// Filter products that are in favourites
-							final favouriteProducts = snapshot.data!.where((product) {
-								return favouriteProvider.isFavourite(product.id!);
-							}).toList();
-					
-							return GridView.builder(
-								padding: const EdgeInsets.all(8),
-								gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-									crossAxisCount: 2,
-									childAspectRatio: 0.65,
-									crossAxisSpacing: 12,
-									mainAxisSpacing: 12,
-								),
-								itemCount: favouriteProducts.length,
-								itemBuilder: (context, index) {
-									final product = favouriteProducts[index];
-									return ProductCard(product: product);
-								},
-							);
-						},
-					);
+      body: GridView.builder(
+				padding: const EdgeInsets.all(8),
+				gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+					crossAxisCount: 2,
+					childAspectRatio: 0.65,
+					crossAxisSpacing: 12,
+					mainAxisSpacing: 12,
+				),
+				itemCount: favouriteItems.length,
+				itemBuilder: (context, index) {
+					final productId = favouriteItems.elementAt(index);
+					final product = products.firstWhere((product) => product.id == productId);
+					return ProductCard(product: product);
 				},
 			),
-    );
-  }
-
-  Widget _buildEmptyState(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.favorite_border,
-            size: 80,
-            color: colorScheme.onSurface.withAlpha(77),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'No favourites yet',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: colorScheme.onSurface,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Start adding products to your favourites!',
-            style: TextStyle(
-              color: colorScheme.onSurface.withAlpha(153),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
