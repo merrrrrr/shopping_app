@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shopping_app/pages/address_form_page.dart';
 import 'package:shopping_app/services/user_service.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -51,10 +50,6 @@ class _RegisterPageState extends State<RegisterPage> {
 						TextButton(
 							onPressed: () {
 								Navigator.of(context).pop();
-								Navigator.of(context).pop();
-								Navigator.push(context, MaterialPageRoute(
-									builder: (context) => AddressFormPage()
-								));
 							},
 							child: Text("OK"),
 						),
@@ -165,6 +160,7 @@ class _RegisterPageState extends State<RegisterPage> {
 												borderRadius: BorderRadius.circular(8),
 											),
 										),
+										keyboardType: TextInputType.name,
 										validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                       	return 'Please enter your name';
@@ -214,7 +210,7 @@ class _RegisterPageState extends State<RegisterPage> {
 									SizedBox(height: 16),
 									
 									TextFormField(
-										controller: phoneNumberController,
+										controller: addressController,
 										maxLines: 2,
 										decoration: InputDecoration(
 											labelText: "Address",
