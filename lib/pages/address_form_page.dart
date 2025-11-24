@@ -17,12 +17,12 @@ class _AddressFormPageState extends State<AddressFormPage> {
   final _auth = FirebaseAuth.instance;
 
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _recipientNameController;
-  late TextEditingController _phoneNumberController;
-  late TextEditingController _addressLine1Controller;
-  late TextEditingController _addressLine2Controller;
-  late TextEditingController _cityController;
-  late TextEditingController _postcodeController;
+  final TextEditingController _recipientNameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _addressLine1Controller = TextEditingController();
+  final TextEditingController _addressLine2Controller = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _postcodeController = TextEditingController();
 
   String _selectedState = 'Selangor';
 
@@ -46,45 +46,72 @@ class _AddressFormPageState extends State<AddressFormPage> {
   ];
 
 	Future<void> saveAddress() async {
+		if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+		try {
 			final newAddress = Address(
-				recipientName: _recipientNameController.text,
-				phoneNumber: _phoneNumberController.text,
-				addressLine1: _addressLine1Controller.text,
-				addressLine2: _addressLine2Controller.text,
-				city: _cityController.text,
+				recipientName: _recipientNameController.text.trim(),
+				phoneNumber: _phoneNumberController.text.trim(),
+				addressLine1: _addressLine1Controller.text.trim(),
+				addressLine2: _addressLine2Controller.text.trim(),
+				city: _cityController.text.trim(),
 				state: _selectedState,
-				postcode: _postcodeController.text,
+				postcode: _postcodeController.text.trim(),
 			).fullAddress;
 
 			final user = _auth.currentUser;
+
 			if (user == null) {
 				throw Exception('User not found.');
 			}
-			final userId = user.uid;
-			DocumentReference doc = _firestore.collection('users').doc(userId);
-			doc.update({'address': newAddress});
-		}
+
+			QuerySnapshot userDocs = await _firestore
+				.collection('users')
+				.where('email', isEqualTo: user.email)
+				.limit(1)
+				.get();
+
+			if (userDocs.docs.isEmpty) {
+				throw Exception('User document not found.');
+			}
+
+			DocumentReference doc = userDocs.docs.first.reference;
+      await doc.update({'address': newAddress});
+
+			showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Success'),
+          content: const Text('Address saved successfully!'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+				SnackBar(content: Text('Failed to save address: $e'))
+			);
+  	}
+	}
 
   @override
   void initState() {
     super.initState();
-    _recipientNameController = TextEditingController(text: widget.address?.recipientName ?? '');
-    _phoneNumberController = TextEditingController(text: widget.address?.phoneNumber ?? '');
-    _addressLine1Controller = TextEditingController(text: widget.address?.addressLine1 ?? '');
-    _addressLine2Controller = TextEditingController(text: widget.address?.addressLine2 ?? '');
-    _cityController = TextEditingController(text: widget.address?.city ?? '');
-    _postcodeController = TextEditingController(text: widget.address?.postcode ?? '');
-    _selectedState = widget.address?.state ?? 'Selangor';
   }
 
   @override
   void dispose() {
-    _recipientNameController.dispose();
-    _phoneNumberController.dispose();
-    _addressLine1Controller.dispose();
-    _addressLine2Controller.dispose();
-    _cityController.dispose();
-    _postcodeController.dispose();
     super.dispose();
   }
 
@@ -114,7 +141,9 @@ class _AddressFormPageState extends State<AddressFormPage> {
                 return null;
               },
             ),
+
             const SizedBox(height: 16),
+
             TextFormField(
               controller: _phoneNumberController,
               decoration: InputDecoration(
@@ -131,7 +160,9 @@ class _AddressFormPageState extends State<AddressFormPage> {
                 return null;
               },
             ),
+
             const SizedBox(height: 16),
+
             TextFormField(
               controller: _addressLine1Controller,
               decoration: InputDecoration(
@@ -148,7 +179,9 @@ class _AddressFormPageState extends State<AddressFormPage> {
                 return null;
               },
             ),
+
             const SizedBox(height: 16),
+
             TextFormField(
               controller: _addressLine2Controller,
               decoration: InputDecoration(
@@ -159,7 +192,9 @@ class _AddressFormPageState extends State<AddressFormPage> {
               ),
               maxLines: 2,
             ),
+
             const SizedBox(height: 16),
+
             TextFormField(
               controller: _cityController,
               decoration: InputDecoration(
@@ -175,7 +210,9 @@ class _AddressFormPageState extends State<AddressFormPage> {
                 return null;
               },
             ),
+
             const SizedBox(height: 16),
+
             DropdownButtonFormField<String>(
               value: _selectedState,
               decoration: InputDecoration(
@@ -201,7 +238,9 @@ class _AddressFormPageState extends State<AddressFormPage> {
                 });
               },
             ),
+
             const SizedBox(height: 16),
+
             TextFormField(
               controller: _postcodeController,
               decoration: InputDecoration(
@@ -223,6 +262,7 @@ class _AddressFormPageState extends State<AddressFormPage> {
             ),
 
             const SizedBox(height: 24),
+
             ElevatedButton(
               onPressed: () {
 								saveAddress();

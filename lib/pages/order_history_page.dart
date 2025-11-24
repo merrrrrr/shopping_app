@@ -30,68 +30,18 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
 
           if (snapshot.hasError) {
             return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64,
-                    color: colorScheme.error,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Failed to load orders',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: colorScheme.onSurface,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '${snapshot.error}',
-                    style: TextStyle(
-                      color: colorScheme.onSurface.withAlpha(153),
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+              child: Text(
+                'Failed to load orders: ${snapshot.error}',
               ),
             );
           }
 
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.shopping_bag_outlined,
-                    size: 80,
-                    color: colorScheme.onSurface.withAlpha(77),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'No orders yet',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: colorScheme.onSurface,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Your order history will appear here',
-                    style: TextStyle(
-                      color: colorScheme.onSurface.withAlpha(153),
-                    ),
-                  ),
-                ],
-              ),
-            );
+            return _buildEmptyState(context);
           }
 
           final orders = snapshot.data!;
+
           return ListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: orders.length,
@@ -99,24 +49,29 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
               final order = orders[index];
               final items = order.items;
 
+							// === ORDER HISTORY CARD ===
               return Card(
                 margin: const EdgeInsets.only(bottom: 16),
                 elevation: 2,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
+
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Order Header
+
+                      // === ORDER HEADER ===
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+
+															// --- Order ID ---
                               Text(
                                 'Order #${order.id!.substring(0, 8)}',
                                 style: TextStyle(
@@ -125,7 +80,10 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                                   color: colorScheme.onSurface,
                                 ),
                               ),
+
                               const SizedBox(height: 4),
+
+															// --- Order Created Time ---
                               Text(
                                 order.createdAt.toLocal().toString().split('.')[0],
                                 style: TextStyle(
@@ -140,6 +98,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
 
 											const Divider(height: 24),
 
+											// === ORDER ITEM ===
                       ListView.separated(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
@@ -150,7 +109,8 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
 														spacing: 4,
                             children: [
-                              // Product Image
+
+                              // --- Item Image ---
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: Image.asset(
@@ -163,7 +123,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
 															
                               const SizedBox(width: 12),
 
-                              // Product Details
+                              // --- Item Details ---
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,7 +150,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                                 ),
                               ),
 
-                              // Price
+                              // --- Item Price ---
                               Text(
                                 "RM ${(items[itemIndex].price * items[itemIndex].quantity).toStringAsFixed(2)}",
                                 style: TextStyle(
@@ -206,9 +166,10 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
 
                       const Divider(),
 
-                      // Order Summary
+                      // === ORDER SUMMARY ===
                       Column(
                         children: [
+													// === SUBTOTAL AMOUNT ===
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -229,6 +190,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
 
                           const SizedBox(height: 8),
 
+													// === SHIPPING FEE ===
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -249,6 +211,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
 
                           const Divider(height: 16),
 
+													// === TOTAL AMOUNT === 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -275,7 +238,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
 
                       const SizedBox(height: 12),
 
-                      // Shipping Address
+                      // === SHIPPING ADDRESS ===
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
@@ -292,7 +255,9 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                               size: 20,
                               color: colorScheme.onSurface.withAlpha(153),
                             ),
+
                             const SizedBox(width: 8),
+
                             Expanded(
                               child: Text(
                                 order.shippingAddress,
@@ -317,4 +282,42 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
       ),
     );
   }
+
+	Widget _buildEmptyState(BuildContext context) {
+		final colorScheme = Theme.of(context).colorScheme;
+
+		return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.shopping_bag_outlined,
+            size: 80,
+            color: colorScheme.onSurface.withAlpha(77),
+          ),
+
+          const SizedBox(height: 16),
+
+          Text(
+            'No orders yet',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: colorScheme.onSurface,
+            ),
+          ),
+
+          const SizedBox(height: 8),
+									
+          Text(
+            'Your order history will appear here',
+            style: TextStyle(
+              color: colorScheme.onSurface.withAlpha(153),
+            ),
+          ),
+        ],
+      ),
+    );
+	}
+
 }

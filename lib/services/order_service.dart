@@ -31,10 +31,6 @@ class OrderService {
 	}
 
 	double calculateSubtotal(List<Item> cartItems) {
-		if (cartItems.isEmpty) {
-      throw Exception('Cart is empty');
-    }
-
 		double subtotal = 0.0;
 		for (var item in cartItems) {
 			subtotal += item.price * item.quantity;

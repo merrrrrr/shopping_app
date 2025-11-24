@@ -1,5 +1,5 @@
 class Product {
-  final String id;
+  final String? id;
   final String name;
   final int sales;
   final double price;
@@ -11,7 +11,7 @@ class Product {
   final int quantity;
 
   Product({
-    required this.id,
+    this.id,
     required this.name,
     required this.price,
     required this.sales,
@@ -25,7 +25,6 @@ class Product {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'name': name,
       'price': price,
       'sales': sales,
@@ -38,17 +37,17 @@ class Product {
     };
   }
 
-	factory Product.fromMap(Map<String, dynamic> map) {
-		return Product(
-			id: map['id'],
-			name: map['name'],
-			price: map['price'],
+  factory Product.fromMap(Map<String, dynamic> map, {String? docId}) {
+    return Product(
+      id: docId ?? '',
+      name: map['name'],
+			price: (map['price'] as num).toDouble(),
 			sales: map['sales'],
 			description: map['description'],
-			images: (map['images']),
+			images: List<String>.from(map['images'] ?? []),
 			category: map['category'],
 			brand: map['brand'],
-			rating: map['rating'],
+			rating: (map['rating'] as num).toDouble(),
 			quantity: map['quantity']
 		);
 	}

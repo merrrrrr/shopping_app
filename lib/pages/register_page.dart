@@ -86,125 +86,127 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-			body: Padding(
-				padding: const EdgeInsets.all(16.0),
+			body: SafeArea(
 				child: Center(
-					child: Column(
-						mainAxisAlignment: MainAxisAlignment.center,
-						children: [
-							Text(
-								"Jiji",
-								style: TextStyle(
-									fontSize: 32,
-									fontWeight: FontWeight.bold,
-									color: Theme.of(context).colorScheme.primary,
-								),
-							),
-
-						SizedBox(height: 24),
-
-						TextField(
-							controller: nameController,
-							decoration: InputDecoration(
-								labelText: "Name",
-								border: OutlineInputBorder(
-									borderRadius: BorderRadius.circular(8),
-								),
-							),
-						),
-
-						SizedBox(height: 16),
-
-						TextField(
-							controller: emailController,
-							decoration: InputDecoration(
-								labelText: "Email",
-								border: OutlineInputBorder(
-									borderRadius: BorderRadius.circular(8),
-								),
-							),
-							keyboardType: TextInputType.emailAddress,
-						),
-
-						SizedBox(height: 16),
-
-						TextField(
-							controller: phoneNumberController,
-							decoration: InputDecoration(
-								labelText: "Phone Number",
-								border: OutlineInputBorder(
-									borderRadius: BorderRadius.circular(8),
-								),
-							),
-							keyboardType: TextInputType.phone,
-						),
-
-						SizedBox(height: 16),
-			
-						TextField(
-							controller: passwordController,
-							decoration: InputDecoration(
-								labelText: "Password",
-								border: OutlineInputBorder(
-									borderRadius: BorderRadius.circular(8),
-								)
-							),
-							obscureText: true,
-						),
-
-						SizedBox(height: 16),
-						
-						TextField(
-								controller: confirmPasswordController,
-								decoration: InputDecoration(
-									labelText: "Confirm Password",
-									border: OutlineInputBorder(
-										borderRadius: BorderRadius.circular(8),
-									)
-								),
-								obscureText: true,
-							),
-
-							SizedBox(height: 16),
-
-							ElevatedButton(
-								onPressed: () {
-									registerUser();
-								},
-								style: ElevatedButton.styleFrom(
-									minimumSize: Size(double.infinity, 48),
-									shape: RoundedRectangleBorder(
-										borderRadius: BorderRadius.circular(8),
-									),
-								),
-								child: Text(
-									"Register",
+					child: SingleChildScrollView(
+						padding: const EdgeInsets.all(16.0),
+						child: Column(
+							mainAxisAlignment: MainAxisAlignment.center,
+							children: [
+								Text(
+									"Jiji",
 									style: TextStyle(
-										fontSize: 16,
+										fontSize: 32,
 										fontWeight: FontWeight.bold,
+										color: Theme.of(context).colorScheme.primary,
 									),
 								),
-							),
-
-							SizedBox(height: 24),							
-
-							Row(
-								mainAxisAlignment: MainAxisAlignment.center,
-							  children: [
-							    Text("Already have an account? "),
-							    GestureDetector(
-										child: Text("Login",
-											style: TextStyle(
-												color: Theme.of(context).colorScheme.primary,
-											),
+																														
+								SizedBox(height: 24),
+																														
+								TextField(
+									controller: nameController,
+									decoration: InputDecoration(
+										labelText: "Name",
+										border: OutlineInputBorder(
+											borderRadius: BorderRadius.circular(8),
 										),
-										onTap: () {
-											Navigator.pop(context);
+									),
+								),
+																														
+								SizedBox(height: 16),
+																														
+								TextField(
+									controller: emailController,
+									decoration: InputDecoration(
+										labelText: "Email",
+										border: OutlineInputBorder(
+											borderRadius: BorderRadius.circular(8),
+										),
+									),
+									keyboardType: TextInputType.emailAddress,
+								),
+								
+								SizedBox(height: 16),
+								
+								TextField(
+									controller: phoneNumberController,
+									decoration: InputDecoration(
+										labelText: "Phone Number",
+										border: OutlineInputBorder(
+											borderRadius: BorderRadius.circular(8),
+										),
+									),
+									keyboardType: TextInputType.phone,
+								),
+								
+								SizedBox(height: 16),
+																					
+								TextField(
+									controller: passwordController,
+									decoration: InputDecoration(
+										labelText: "Password",
+										border: OutlineInputBorder(
+											borderRadius: BorderRadius.circular(8),
+										)
+									),
+									obscureText: true,
+								),
+																					
+								SizedBox(height: 16),
+								
+								TextField(
+									controller: confirmPasswordController,
+									decoration: InputDecoration(
+										labelText: "Confirm Password",
+										border: OutlineInputBorder(
+											borderRadius: BorderRadius.circular(8),
+										)
+									),
+									obscureText: true,
+								),
+																					
+								SizedBox(height: 16),
+																					
+								ElevatedButton(
+									onPressed: () {
+										registerUser();
+									},
+									style: ElevatedButton.styleFrom(
+										minimumSize: Size(double.infinity, 48),
+										shape: RoundedRectangleBorder(
+											borderRadius: BorderRadius.circular(8),
+										),
+									),
+									child: Text(
+										"Register",
+										style: TextStyle(
+											fontSize: 16,
+											fontWeight: FontWeight.bold,
+										),
+									),
+								),
+																				
+								SizedBox(height: 24),							
+																				
+								Row(
+									mainAxisAlignment: MainAxisAlignment.center,
+									children: [
+										Text("Already have an account? "),
+										GestureDetector(
+											child: Text("Login",
+												style: TextStyle(
+													color: Theme.of(context).colorScheme.primary,
+												),
+											),
+											onTap: () {
+												Navigator.pop(context);
 											},
-									)
-							  ],
-							),
-						],
+										)
+									],
+								),
+							],
+						),
 					),
 				),
 			),

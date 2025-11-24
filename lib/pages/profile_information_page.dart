@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shopping_app/pages/change_password_page.dart';
@@ -107,7 +106,11 @@ class _ProfileInformationPageState extends State<ProfileInformationPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _buildAvatar(context),
+              CircleAvatar(
+								radius: 60,
+								backgroundImage: const AssetImage('assets/default_avatar.png'),
+								backgroundColor: colorScheme.surface,
+							),
 
               const SizedBox(height: 30),
 
@@ -240,40 +243,6 @@ class _ProfileInformationPageState extends State<ProfileInformationPage> {
       ),
     );
   }
-
-  Widget _buildAvatar(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-		final isAssetImage = _avatarUrl.startsWith('assets/');
-		
-    return Stack(
-      children: [
-        CircleAvatar(
-          radius: 60,
-          backgroundImage: isAssetImage 
-						? AssetImage(_avatarUrl) as ImageProvider
-						: (_avatarUrl.isEmpty 
-							? const AssetImage('assets/default_avatar.png')
-							: FileImage(File(_avatarUrl))),
-          backgroundColor: colorScheme.surface,
-        ),
-        Positioned(
-          bottom: 0,
-          right: 0,
-          child: Container(
-            decoration: BoxDecoration(
-              color: colorScheme.primary,
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.camera_alt, color: Colors.white, size: 20),
-              onPressed: () {
-              },
-            ),
-          ),
-        ),
-      ],
-    );
-	}
 
   // Read-only field widget
   Widget _buildReadOnlyField({

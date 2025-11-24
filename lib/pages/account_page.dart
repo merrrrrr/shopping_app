@@ -36,6 +36,7 @@ class AccountPage extends StatelessWidget {
           final photoUrl = 'assets/default_avatar.png';
 
           return ListView(
+						physics: NeverScrollableScrollPhysics(),
             children: <Widget>[
               _buildProfileHeader(context, userName, userEmail, photoUrl),
           
@@ -99,6 +100,7 @@ class AccountPage extends StatelessWidget {
   Widget _buildMenuList(BuildContext context) {
     return Column(
       children: [
+
 				_buildMenuListItem(
 					context,
 					icon: Icons.person_outline,
@@ -107,6 +109,7 @@ class AccountPage extends StatelessWidget {
 						builder: (context) => ProfileInformationPage()
 					)),
 				),
+
         _buildMenuListItem(
           context,
           icon: Icons.history,
@@ -115,12 +118,7 @@ class AccountPage extends StatelessWidget {
 						builder: (context) => OrderHistoryPage()
 					)),
         ),
-        _buildMenuListItem(
-          context,
-          icon: Icons.payment,
-          title: 'Payment Methods',
-          onTap: () {},
-        ),
+
         _buildMenuListItem(
           context,
           icon: Icons.favorite_border,
@@ -129,7 +127,9 @@ class AccountPage extends StatelessWidget {
 						builder: (context) => FavouritesPage()
 					)),
         ),
+
         const Divider(),
+
         _buildMenuListItem(
           context,
           icon: Icons.settings_outlined,

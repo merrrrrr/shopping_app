@@ -39,7 +39,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 											alignment: Alignment.bottomCenter,
 											children: [
 
-												// ========= IMAGE SECTION ==========
+												// ========== IMAGE SECTION ==========
 												PageView(
 													controller: _pageController,
 													children: widget.product.images.map((image) {
@@ -47,7 +47,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 													}).toList(),
 												),
 
-												// ========= IMAGE INDICATOR SECTION ==========
+												// ========== IMAGE INDICATOR SECTION ==========
 												Padding(
 													padding: const EdgeInsets.only(bottom: 16.0),
 													child: SmoothPageIndicator(
@@ -178,7 +178,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           // ========== FAVORITE BUTTON ==========
           Consumer<FavouriteProvider>(
 						builder: (context, favouriteProvider, child) {
-							final isFavourite = favouriteProvider.isFavourite(widget.product.id);
+							final isFavourite = favouriteProvider.isFavourite(widget.product.id!);
 						  return Container(
 								decoration: BoxDecoration(
 									color: Colors.black.withAlpha(50),
@@ -186,7 +186,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 								),
 								child: IconButton(
 									onPressed: () {
-										favouriteProvider.toggleFavourite(widget.product.id);
+										favouriteProvider.toggleFavourite(widget.product.id!);
 									},
 									style: IconButton.styleFrom(splashFactory: NoSplash.splashFactory),
 									icon: Icon(
@@ -218,7 +218,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 final cartProvider = Provider.of<CartProvider>(context, listen: false);
                 
                 final newItem = Item(
-                  productId: widget.product.id,
+                  productId: widget.product.id!,
                   productName: widget.product.name,
                   imageUrl: widget.product.images.first,
                   price: widget.product.price,

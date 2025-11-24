@@ -90,8 +90,7 @@ class MainApp extends StatelessWidget {
 				
 				themeMode: ThemeMode.light,
 				debugShowCheckedModeBanner: false,
-				// home: const BottomNavBar(),
-				home: StreamBuilder(
+				home: StreamBuilder<User?>(
 					stream: FirebaseAuth.instance.authStateChanges(),
 					builder:(context, snapshot) {
 						if (snapshot.connectionState == ConnectionState.waiting) {
@@ -100,7 +99,11 @@ class MainApp extends StatelessWidget {
 							);
 						}
 	
-						if (snapshot.hasData) {
+						if (snapshot.hasData && snapshot.data != null) {
+							WidgetsBinding.instance.addPostFrameCallback((_) {
+              	Provider.of<FavouriteProvider>(context, listen: false).loadFavourites();
+            	});
+
 							return const BottomNavBar();
 						}
 							

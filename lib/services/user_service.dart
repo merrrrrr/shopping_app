@@ -21,7 +21,10 @@ class UserService {
 
 	Future<void> createUser(String name, String email, String phoneNumber, String password) async {
 		try {
-			await _auth.createUserWithEmailAndPassword(email: email, password: password);
+			UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+				email: email,
+				password: password
+			);
 
 			final user = User(
 				name: name,
@@ -34,7 +37,8 @@ class UserService {
 	
 			final userMap = user.toMap();
 			userMap['createdAt'] = FieldValue.serverTimestamp();
-			await _usersCollection.add(userMap);
+			await _usersCollection.doc(userCredential.user!.uid).set(userMap);
+
 		} catch(e) {
 			debugPrint('Error creating new user: $e');
 			throw Exception('Failed to create new user.');
