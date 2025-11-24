@@ -265,9 +265,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 							IconButton(
 								icon: const Icon(Icons.add_circle_outline),
 								onPressed: () {
-									setState(() {
-										quantity += 1;
-									});
+									setState(() => quantity += 1);
 								},
 							),
 						],

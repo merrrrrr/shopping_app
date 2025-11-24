@@ -166,9 +166,7 @@ class AccountPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        onPressed: () {
-          FirebaseAuth.instance.signOut();
-        },
+        onPressed: FirebaseAuth.instance.signOut,
       ),
     );
   }

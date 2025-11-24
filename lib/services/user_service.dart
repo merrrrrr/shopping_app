@@ -19,7 +19,7 @@ class UserService {
 		return _firestore.collection('users');
 	}
 
-	Future<void> createUser(String name, String email, String phoneNumber, String password) async {
+	Future<void> createUser(String name, String email, String phoneNumber, String address, String password) async {
 		try {
 			UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
 				email: email,
@@ -31,7 +31,7 @@ class UserService {
 				email: email,
 				phoneNumber: phoneNumber,
 				photoUrl: '',
-				address: '',
+				address: address,
 				createdAt: DateTime.now(),
 			);
 	

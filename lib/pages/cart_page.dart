@@ -80,9 +80,7 @@ class CartPage extends StatelessWidget {
 										content: Text('Order placed successfully! Order ID: ${orderId.substring(0, 8)}'),
 										actions: [
 											TextButton(
-												onPressed: () {
-													Navigator.of(context).pop();
-												},
+												onPressed: () => Navigator.of(context).pop(),
 												child: Text("OK"),
 											),
 										],

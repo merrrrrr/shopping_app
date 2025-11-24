@@ -206,9 +206,7 @@ class _ProfileInformationPageState extends State<ProfileInformationPage> {
 												content: const Text('Are you sure you want to delete your account? This action cannot be undone.'),
 												actions: [
 													TextButton(
-														onPressed: () {
-															Navigator.of(context).pop();
-														},
+														onPressed: () => Navigator.of(context).pop(),
 														child: const Text('Cancel'),
 													),
 													TextButton(

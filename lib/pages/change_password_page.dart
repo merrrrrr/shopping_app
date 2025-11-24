@@ -114,9 +114,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                 : Icons.visibility,
                           ),
                           onPressed: () {
-                            setState(() {
-                              _obscureCurrentPassword = !_obscureCurrentPassword;
-                            });
+                            setState(() => _obscureCurrentPassword = !_obscureCurrentPassword);
                           },
                         ),
                         border: OutlineInputBorder(
@@ -147,9 +145,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                 : Icons.visibility,
                           ),
                           onPressed: () {
-                            setState(() {
-                              _obscureNewPassword = !_obscureNewPassword;
-                            });
+                            setState(() => _obscureNewPassword = !_obscureNewPassword);
                           },
                         ),
                         border: OutlineInputBorder(
@@ -183,9 +179,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                 : Icons.visibility,
                           ),
                           onPressed: () {
-                            setState(() {
-                              _obscureConfirmPassword = !_obscureConfirmPassword;
-                            });
+                            setState(() => _obscureConfirmPassword = !_obscureConfirmPassword);
                           },
                         ),
                         border: OutlineInputBorder(

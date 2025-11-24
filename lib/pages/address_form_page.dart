@@ -264,9 +264,7 @@ class _AddressFormPageState extends State<AddressFormPage> {
             const SizedBox(height: 24),
 
             ElevatedButton(
-              onPressed: () {
-								saveAddress();
-              },
+              onPressed: saveAddress,
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
                 shape: RoundedRectangleBorder(
