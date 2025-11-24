@@ -204,9 +204,9 @@ class _LoginPageState extends State<LoginPage> {
 								Row(
 									mainAxisAlignment: MainAxisAlignment.center,
 									children: [
-										Text("New user? Click"),
+										Text("New user?"),
 										GestureDetector(
-											child: Text(" here ",
+											child: Text(" Sign up here.",
 												style: TextStyle(
 													color: Theme.of(context).colorScheme.primary,
 												),
@@ -220,7 +220,6 @@ class _LoginPageState extends State<LoginPage> {
 												);
 											},
 										),
-										Text("to register."),
 									],
 								),
 
