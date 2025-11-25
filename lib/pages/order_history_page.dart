@@ -36,9 +36,11 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
             );
           }
 
-          // if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          //   return ;
-          // }
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(
+							child: Text('No orders found.'),
+						);
+          }
 
           final orders = snapshot.data!;
 

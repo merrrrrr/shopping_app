@@ -35,8 +35,20 @@ class _FavouritesPageState extends State<FavouritesPage> {
             );
           }
 
+					if (snapshot.data == null || snapshot.data!.isEmpty) {
+						return const Center(
+							child: Text('No product found.'),
+						);
+					}
+
 					return Consumer<FavouriteProvider>(
-						builder: (context, favouriteProvider, child) {					
+						builder: (context, favouriteProvider, child) {	
+							if (favouriteProvider.favouriteProductIds.isEmpty) {
+								return const Center(
+									child: Text('No favourites products.')
+								);
+							}
+
 							// Filter products that are in favourites
 							final favouriteProducts = snapshot.data!.where((product) {
 								return favouriteProvider.isFavourite(product.id!);

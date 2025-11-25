@@ -13,6 +13,12 @@ class CartPage extends StatelessWidget {
       appBar: AppBar(title: const Text("Shopping Cart")),
       body: Consumer<CartProvider>(
 				builder: (context, cartProvider, child) {
+					if (cartProvider.cartItems.isEmpty) {
+						return const Center(
+							child: Text('No items in cart.')
+						);
+					}
+
 					return Column(
 						children: [
 							Expanded(
