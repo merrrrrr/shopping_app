@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shopping_app/pages/favourites_page.dart';
 import 'package:shopping_app/pages/order_history_page.dart';
-import 'package:shopping_app/pages/profile_information_page.dart';
 
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
@@ -89,9 +87,7 @@ class AccountPage extends StatelessWidget {
 					context,
 					icon: Icons.person_outline,
 					title: 'Profile Information',
-					onTap: () => Navigator.push(context, MaterialPageRoute(
-						builder: (context) => ProfileInformationPage()
-					)),
+					onTap: () {}
 				),
 
         _buildMenuListItem(
@@ -107,9 +103,7 @@ class AccountPage extends StatelessWidget {
           context,
           icon: Icons.favorite_border,
           title: 'Favourites',
-          onTap: () => Navigator.push(context, MaterialPageRoute(
-						builder: (context) => FavouritesPage()
-					)),
+          onTap: () {},
         ),
 
         const Divider(),

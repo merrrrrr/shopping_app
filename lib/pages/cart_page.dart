@@ -1,11 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:shopping_app/data/cart_items.dart';
+import 'package:shopping_app/data/order_data.dart';
 import 'package:shopping_app/models/item.dart';
+import 'package:shopping_app/models/order.dart';
+import 'package:uuid/uuid.dart';
 
-class CartPage extends StatelessWidget {
+class CartPage extends StatefulWidget {
   const CartPage({super.key});
 
+  @override
+  State<CartPage> createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
+
+	void _incrementQuantity(int index) {
+    setState(() {
+      final item = cartItems[index];
+			cartItems[index] = Item(
+				productId: item.productId,
+				productName: item.productName,
+				imageUrl: item.imageUrl,
+				price: item.price,
+				quantity: item.quantity + 1,
+			);
+    });
+  }
+
+  void _decrementQuantity(int index) {
+    setState(() {
+      final item = cartItems[index];
+			cartItems[index] = Item(
+				productId: item.productId,
+				productName: item.productName,
+				imageUrl: item.imageUrl,
+				price: item.price,
+				quantity: item.quantity - 1,
+			);
+    });
+  }
+
+	void _deleteItem(int index) {
+    setState(() {
+      cartItems.removeAt(index);
+    });
+  }
+
+	double _calculateTotal() {
+		double total = 0;
+		for (var item in cartItems) {
+			total += item.price * item.quantity;
+		}
+		return total;
+  }
+	
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,9 +64,7 @@ class CartPage extends StatelessWidget {
 					Expanded(
 						child: ListView.builder(
 							itemCount: cartItems.length,
-							itemBuilder: (context, index) {
-								Item cartItem = cartItems[index].keys.first;
-								
+							itemBuilder: (context, index) {								
 								return _buildCartItemCard(context, index);
 							},
 						),
@@ -48,22 +95,32 @@ class CartPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
 
-		  Text(
-			"Total: RM ${cartItems.fold(0.0, (total, item) => total + item.keys.first.price * item.values.first).toStringAsFixed(2)}",
-			style: const TextStyle(
-			  fontSize: 18,
-			  fontWeight: FontWeight.bold,
-			),
-		  ),
-
-		  ElevatedButton(
-			onPressed: cartItems.isEmpty ? null : () {
-							final orderId = DateTime.now().millisecondsSinceEpoch.toString();
+		  		Text(
+						"Total: RM ${_calculateTotal().toStringAsFixed(2)}",
+						style: const TextStyle(
+						  fontSize: 18,
+						  fontWeight: FontWeight.bold,
+						),
+		  		),
+				ElevatedButton(
+						onPressed: cartItems.isEmpty ? null : () {
+							final orderId = const Uuid().v4();
+							orders.add(
+									Order(
+									id: orderId,
+									userId: 'user_123',
+									items: List<Item>.from(cartItems),
+									totalAmount: _calculateTotal(),
+									shippingAddress: '123 Main St, City, Country',
+									createdAt: DateTime.now(),
+								)
+							);
+							cartItems.clear();
 							cartItems.clear();
 
 							if (!context.mounted) return;
-							
-              showDialog(
+
+      			  showDialog(
 								context: context,
 								builder: (context) {
 									return AlertDialog(
@@ -78,7 +135,10 @@ class CartPage extends StatelessWidget {
 									);
 								}
 							);
-            },
+
+							setState(() {});
+          	},
+
             child: const Text("Checkout"),
           )
         ],
@@ -87,7 +147,9 @@ class CartPage extends StatelessWidget {
 	}
 
 	Widget _buildCartItemCard(BuildContext context, int index) {
-		final cartItem = cartItems[index].keys.first;
+		final cartItem = cartItems[index];
+		final quantity = cartItem.quantity;
+
 		return Card(
       clipBehavior: Clip.hardEdge,
 			margin: const EdgeInsets.symmetric(
@@ -101,9 +163,7 @@ class CartPage extends StatelessWidget {
     	    extentRatio: 0.35,
     	    children: [
     	      SlidableAction(
-    	        onPressed: (context) {
-    	          cartItems.removeAt(index);
-    	        },
+    	        onPressed: (context) => _deleteItem(index),
     	        backgroundColor: Colors.red,
     	        foregroundColor: Colors.white,
     	        icon: Icons.delete,
@@ -163,22 +223,22 @@ class CartPage extends StatelessWidget {
 												// Widget: Quantity Selector
                         Row(
                           children: [
-							IconButton(
-							  icon: const Icon(Icons.remove_circle_outline),
-							  onPressed: cartItem.quantity > 1 ? () {
-								cartItems[index][cartItem] = cartItem.quantity - 1;
-							  } : null,
-							),
+														IconButton(
+														  icon: const Icon(Icons.remove_circle_outline),
+														  onPressed: quantity > 1 ? () {
+																_decrementQuantity(index);
+														  } : null,
+														),
 
-							Text(
-							  cartItem.quantity.toString(),
-							  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-							),
+														Text(
+														  quantity.toString(),
+														  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+														),
 
                             IconButton(
                               icon: const Icon(Icons.add_circle_outline),
                               onPressed: () {
-                                cartItems[index][cartItem] = cartItem.quantity + 1;
+																_incrementQuantity(index);
                               },
                             ),
                           ],
@@ -192,39 +252,6 @@ class CartPage extends StatelessWidget {
           ),
         ),
       ),
-		);
-	}
-
-	Widget _buildEmptyState(BuildContext context) {
-		final colorScheme = Theme.of(context).colorScheme;
-
-    return Center(
-			child: Column(
-				mainAxisAlignment: MainAxisAlignment.center,
-				children: [
-					Icon(
-						Icons.shopping_cart_outlined,
-						size: 80,
-						color: colorScheme.onSurface.withAlpha(77),
-					),
-					const SizedBox(height: 16),
-					Text(
-						'No items in your cart yet',
-						style: TextStyle(
-							fontSize: 18,
-							fontWeight: FontWeight.bold,
-							color: colorScheme.onSurface,
-						),
-					),
-					const SizedBox(height: 8),
-					Text(
-						'Start adding products to your cart!',
-						style: TextStyle(
-							color: colorScheme.onSurface.withAlpha(153),
-						),
-					),
-				],
-			),
 		);
 	}
 

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shopping_app/data/cart_items.dart';
-import 'package:shopping_app/data/favourite_items.dart';
 import 'package:shopping_app/models/item.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../models/product.dart';
@@ -17,8 +15,9 @@ class ProductDetailsPage extends StatefulWidget {
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   int quantity = 1;
+  bool isFavourite = false;
 
-	final PageController _pageController = PageController();
+  final PageController _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +152,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       ),
     );
   }
-  
   Widget _buildAppBarButtons(BuildContext context) {
     return Positioned(
       top: 16,
@@ -176,22 +174,25 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           ),
 
           // ========== FAVORITE BUTTON ==========
-         Container(
-                decoration: BoxDecoration(
-                  color: Colors.black.withAlpha(50),
-                  shape: BoxShape.circle,
-                ),
-                child: IconButton(
-                  onPressed: () {
-                    favouriteItems.contains(widget.product.id) ? favouriteItems.remove(widget.product.id) : favouriteItems.add(widget.product.id!);
-                  },
-                  style: IconButton.styleFrom(splashFactory: NoSplash.splashFactory),
-                  icon: Icon(
-                    favouriteItems.contains(widget.product.id) ? Icons.favorite : Icons.favorite_border,
-                    color: favouriteItems.contains(widget.product.id) ? Colors.red : Colors.white,
-                  ),
-                ),
+        	Container(
+        		decoration: BoxDecoration(
+        	    color: Colors.black.withAlpha(50),
+        	    shape: BoxShape.circle,
+        	  ),
+        	  child: IconButton(
+        	    onPressed: () {
+								setState(() {
+									isFavourite = !isFavourite;
+								});
+        	    },
+
+        	    style: IconButton.styleFrom(splashFactory: NoSplash.splashFactory),
+        	    icon: Icon(
+        	      isFavourite ? Icons.favorite : Icons.favorite_border,
+        	      color: isFavourite ? Colors.red : Colors.white,
               ),
+            ),
+          ),
         ],
       ),
     );
@@ -217,8 +218,24 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   price: widget.product.price,
                   quantity: quantity,
                 );
-                
-                cartItems.add({newItem: quantity});
+
+								if (cartItems.any((item) => item.productId == newItem.productId)) {
+									final existingItemIndex = cartItems.indexWhere((item) => item.productId == newItem.productId);
+									setState(() {
+										final existingItem = cartItems[existingItemIndex];
+										cartItems[existingItemIndex] = Item(
+											productId: existingItem.productId,
+											productName: existingItem.productName,
+											imageUrl: existingItem.imageUrl,
+											price: existingItem.price,
+											quantity: existingItem.quantity + quantity,
+										);
+									});
+								} else {
+									setState(() {
+										cartItems.add(newItem);
+									});
+								}
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -226,11 +243,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     duration: Duration(milliseconds: 500),
                   ),
                 );
-                
-                // Reset quantity after adding
-                setState(() {
-                  quantity = 1;
-                });
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
