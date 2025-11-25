@@ -36,9 +36,9 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
             );
           }
 
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return _buildEmptyState(context);
-          }
+          // if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          //   return ;
+          // }
 
           final orders = snapshot.data!;
 
@@ -169,48 +169,6 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                       // === ORDER SUMMARY ===
                       Column(
                         children: [
-													// === SUBTOTAL AMOUNT ===
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Subtotal',
-                                style: TextStyle(
-                                  color: colorScheme.onSurface.withAlpha(153),
-                                ),
-                              ),
-                              Text(
-                                'RM ${order.subtotal.toStringAsFixed(2)}',
-                                style: TextStyle(
-                                  color: colorScheme.onSurface,
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(height: 8),
-
-													// === SHIPPING FEE ===
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Shipping Fee',
-                                style: TextStyle(
-                                  color: colorScheme.onSurface.withAlpha(153),
-                                ),
-                              ),
-                              Text(
-                                'RM ${order.shippingFee.toStringAsFixed(2)}',
-                                style: TextStyle(
-                                  color: colorScheme.onSurface,
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          const Divider(height: 16),
-
 													// === TOTAL AMOUNT === 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -223,6 +181,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                                   color: colorScheme.onSurface,
                                 ),
                               ),
+
                               Text(
                                 'RM ${order.totalAmount.toStringAsFixed(2)}',
                                 style: TextStyle(
@@ -283,41 +242,5 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
     );
   }
 
-	Widget _buildEmptyState(BuildContext context) {
-		final colorScheme = Theme.of(context).colorScheme;
-
-		return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.shopping_bag_outlined,
-            size: 80,
-            color: colorScheme.onSurface.withAlpha(77),
-          ),
-
-          const SizedBox(height: 16),
-
-          Text(
-            'No orders yet',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: colorScheme.onSurface,
-            ),
-          ),
-
-          const SizedBox(height: 8),
-									
-          Text(
-            'Your order history will appear here',
-            style: TextStyle(
-              color: colorScheme.onSurface.withAlpha(153),
-            ),
-          ),
-        ],
-      ),
-    );
-	}
 
 }

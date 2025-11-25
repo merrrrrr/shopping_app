@@ -13,10 +13,6 @@ class CartPage extends StatelessWidget {
       appBar: AppBar(title: const Text("Shopping Cart")),
       body: Consumer<CartProvider>(
 				builder: (context, cartProvider, child) {
-				  if (cartProvider.cartItems.isEmpty) {
-						return _buildEmptyState(context);
-          }
-
 					return Column(
 						children: [
 							Expanded(
@@ -200,39 +196,6 @@ class CartPage extends StatelessWidget {
           ),
         ),
       ),
-		);
-	}
-
-	Widget _buildEmptyState(BuildContext context) {
-		final colorScheme = Theme.of(context).colorScheme;
-
-    return Center(
-			child: Column(
-				mainAxisAlignment: MainAxisAlignment.center,
-				children: [
-					Icon(
-						Icons.shopping_cart_outlined,
-						size: 80,
-						color: colorScheme.onSurface.withAlpha(77),
-					),
-					const SizedBox(height: 16),
-					Text(
-						'No items in your cart yet',
-						style: TextStyle(
-							fontSize: 18,
-							fontWeight: FontWeight.bold,
-							color: colorScheme.onSurface,
-						),
-					),
-					const SizedBox(height: 8),
-					Text(
-						'Start adding products to your cart!',
-						style: TextStyle(
-							color: colorScheme.onSurface.withAlpha(153),
-						),
-					),
-				],
-			),
 		);
 	}
 

@@ -35,16 +35,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
             );
           }
 
-					if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return _buildEmptyState(context);
-          }
-
 					return Consumer<FavouriteProvider>(
-						builder: (context, favouriteProvider, child) {
-							if (favouriteProvider.favouriteProductIds.isEmpty) {
-								return _buildEmptyState(context);
-							}
-					
+						builder: (context, favouriteProvider, child) {					
 							// Filter products that are in favourites
 							final favouriteProducts = snapshot.data!.where((product) {
 								return favouriteProvider.isFavourite(product.id!);
@@ -68,39 +60,6 @@ class _FavouritesPageState extends State<FavouritesPage> {
 					);
 				},
 			),
-    );
-  }
-
-  Widget _buildEmptyState(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.favorite_border,
-            size: 80,
-            color: colorScheme.onSurface.withAlpha(77),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'No favourites yet',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: colorScheme.onSurface,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Start adding products to your favourites!',
-            style: TextStyle(
-              color: colorScheme.onSurface.withAlpha(153),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

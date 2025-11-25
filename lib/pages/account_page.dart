@@ -70,6 +70,7 @@ class AccountPage extends StatelessWidget {
 						child: Column(
 							crossAxisAlignment: CrossAxisAlignment.start,
 							children: [
+								
 								Text(
 									userName,
 									style: TextStyle(
@@ -79,7 +80,9 @@ class AccountPage extends StatelessWidget {
 									),
 									overflow: TextOverflow.ellipsis,
 								),
+
 								const SizedBox(height: 4),
+								
 								Text(
 									FirebaseAuth.instance.currentUser?.email ?? "",
 									style: TextStyle(

@@ -30,7 +30,7 @@ class OrderService {
 		return _firestore.collection('orders');
 	}
 
-	double calculateSubtotal(List<Item> cartItems) {
+	double calculateTotal(List<Item> cartItems) {
 		double subtotal = 0.0;
 		for (var item in cartItems) {
 			subtotal += item.price * item.quantity;
@@ -39,23 +39,14 @@ class OrderService {
 		return double.parse(subtotal.toStringAsFixed(2));
 	}
 
-	double calculateTotal(double subtotal, {double shippingFee = 5.0}) {
-		double totalPrice = subtotal + shippingFee;
-		return double.parse(totalPrice.toStringAsFixed(2));
-	}
-
 	Future<String> createOrderFromCart(List<Item> cartItems, {double shippingFee = 5.0}) async {
 		try {
 			final address = await currentUserAddress;
 
-			final subtotal = calculateSubtotal(cartItems);
-    	final totalAmount = calculateTotal(subtotal, shippingFee: shippingFee);
-
+			final totalAmount = calculateTotal(cartItems);
 			final order = Order(
         userId: currentUserId,
 				items: cartItems,
-        subtotal: subtotal,
-        shippingFee: shippingFee,
         totalAmount: totalAmount,
         shippingAddress: address,
         createdAt: DateTime.now(),

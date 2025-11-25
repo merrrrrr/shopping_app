@@ -9,10 +9,8 @@ class CartProvider with ChangeNotifier {
 	List<Item> get cartItems => List.unmodifiable(_cartItems);
   
   int get itemCount => _cartItems.length;
-  
-  double get subtotal => _orderService.calculateSubtotal(_cartItems);
-  
-  double get total => _orderService.calculateTotal(subtotal);
+    
+  double get total => _orderService.calculateTotal(_cartItems);
 
 	void addItem(Item item) {
 		final existingItemIndex = _cartItems.indexWhere((cartItem) => cartItem.productId == item.productId);
