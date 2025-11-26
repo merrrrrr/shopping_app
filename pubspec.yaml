@@ -9,12 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  carousel_slider: ^5.1.1
   smooth_page_indicator: ^1.2.1
   flutter_slidable: ^4.0.3
-  skeletonizer: ^2.1.0+1
-  image_picker: ^1.2.1
-  provider: ^6.1.5+1
   uuid: ^4.5.2
 
 dev_dependencies:
@@ -58,5 +54,3 @@ flutter:
     - assets/products/ot4/
     - assets/products/ot5/
     - assets/products/ot6/
-    - assets/banners/
-    - assets/categories/
