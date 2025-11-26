@@ -9,13 +9,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  carousel_slider: ^5.1.1
   smooth_page_indicator: ^1.2.1
   flutter_slidable: ^4.0.3
   firebase_auth: ^6.1.1
   firebase_core: ^4.2.0
   cloud_firestore: ^6.0.3
-  image_picker: ^1.2.1
   provider: ^6.1.5+1
 
 dev_dependencies:
@@ -59,5 +57,3 @@ flutter:
     - assets/products/ot4/
     - assets/products/ot5/
     - assets/products/ot6/
-    - assets/banners/
-    - assets/categories/
