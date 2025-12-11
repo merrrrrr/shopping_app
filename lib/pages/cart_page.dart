@@ -4,6 +4,7 @@ import 'package:shopping_app/data/cart_items.dart';
 import 'package:shopping_app/data/order_data.dart';
 import 'package:shopping_app/models/item.dart';
 import 'package:shopping_app/models/order.dart';
+import 'package:shopping_app/widgets/quantity_selector.dart';
 import 'package:uuid/uuid.dart';
 
 class CartPage extends StatefulWidget {
@@ -221,28 +222,11 @@ class _CartPageState extends State<CartPage> {
                     	),
 
 												// Widget: Quantity Selector
-                        Row(
-                          children: [
-														IconButton(
-														  icon: const Icon(Icons.remove_circle_outline),
-														  onPressed: quantity > 1 ? () {
-																_decrementQuantity(index);
-														  } : null,
-														),
-
-														Text(
-														  quantity.toString(),
-														  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-														),
-
-                            IconButton(
-                              icon: const Icon(Icons.add_circle_outline),
-                              onPressed: () {
-																_incrementQuantity(index);
-                              },
-                            ),
-                          ],
-                        ),
+                        QuantitySelector(
+													quantity: quantity,
+													onIncrement: () => _incrementQuantity(index),
+													onDecrement: () => _decrementQuantity(index),
+												)
                       ],
                     ),
                   ],

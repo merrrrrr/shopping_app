@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_app/models/user.dart';
 import 'package:shopping_app/pages/order_history_page.dart';
 
 class AccountPage extends StatelessWidget {
@@ -6,9 +7,11 @@ class AccountPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-		final userName = 'User';
-    final userEmail = 'someone@example.com';
-    final photoUrl = 'assets/default_avatar.png';
+		User user  = User(
+			name: 'user',
+			email: 'user@example.com',
+			phoneNumber: '123-456-7890',
+			createdAt: DateTime.now());
 
     return Scaffold(
       appBar: AppBar(
@@ -17,7 +20,7 @@ class AccountPage extends StatelessWidget {
       body: ListView(
 				physics: NeverScrollableScrollPhysics(),
       	children: <Widget>[
-      	  _buildProfileHeader(context, userName, userEmail, photoUrl),
+      	  _buildProfileHeader(context, user.name, user.email, 'assets/default_avatar.png'),
 	
       	  const SizedBox(height: 10),
 	

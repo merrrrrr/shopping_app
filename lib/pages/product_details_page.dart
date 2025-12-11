@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_app/data/cart_items.dart';
 import 'package:shopping_app/models/item.dart';
+import 'package:shopping_app/widgets/quantity_selector.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../models/product.dart';
 
@@ -255,26 +256,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           ),
 
 					// ========== QUANTITY SELECTOR ==========
-					Row(
-						children: [
-							IconButton(
-								icon: const Icon(Icons.remove_circle_outline),
-								onPressed: quantity > 1
-								? () => setState(() {quantity -= 1;})
-								: null,
-							),
-							Text(
-								quantity.toString(),
-								style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-							),
-							IconButton(
-								icon: const Icon(Icons.add_circle_outline),
-								onPressed: () {
-									setState(() => quantity += 1);
-								},
-							),
-						],
-					),
+					QuantitySelector(
+						quantity: quantity,
+						onIncrement: () => setState(() => quantity += 1),
+						onDecrement: () => setState(() => quantity -= 1),
+					)
 				],
 			),
 		);
